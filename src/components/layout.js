@@ -24,10 +24,6 @@ const StyledLi = styled.li`
   display: inline-block;
   padding-left: 1rem;
 `
-const StyledLink = styled(LinkToOverwrite)`
-  background-color: pink;
-`
-
 const StyledUl = styled.ul`
   display: flex;
 `
@@ -37,18 +33,29 @@ const LinkToOverwrite = ({ to, children }) => (
   </StyledLi>
 );
 
+const StyledLink = styled(LinkToOverwrite)`
+  background-color: pink;
+`
+
+const MainContent = styled.div`
+  padding: 0 1rem;
+`
+
 export default function Layout({ children }) {
   return (
     <Container>
       <Header>
         <Link to="/"><h3>My Site</h3></Link>
-        <StyledUl>
+        {/* // TODO: leaving out multi page navigation for now */}
+        {/* <StyledUl>
           <StyledLink to="/"><h3>Home</h3></StyledLink>
           <StyledLink to="/about"><h3>About</h3></StyledLink>
           <StyledLink to="/contact"><h3>Contact</h3></StyledLink>
-        </StyledUl>
+        </StyledUl> */}
       </Header>
-      {children}
+      <MainContent>
+        {children}
+      </MainContent>
       <Footer>Made by Christian Dibala Bell</Footer>
     </Container>
   );
