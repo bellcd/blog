@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from 'gatsby';
+import { Link, useStaticQuery, graphql } from 'gatsby';
 import styled from 'styled-components';
 
 const Container = styled.div`
@@ -42,6 +42,17 @@ const MainContent = styled.div`
 `
 
 export default function Layout({ children }) {
+  const data = useStaticQuery(
+    graphql`
+      query {
+        site {
+          siteMetadata {
+            title
+          }
+        }
+      }
+    `
+  );
   return (
     <Container>
       <Header>
@@ -54,6 +65,7 @@ export default function Layout({ children }) {
         </StyledUl> */}
       </Header>
       <MainContent>
+        {data.site.siteMetadata.title}
         {children}
       </MainContent>
       <Footer>Made by Christian Dibala Bell</Footer>

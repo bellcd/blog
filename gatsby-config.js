@@ -6,6 +6,9 @@
 
 module.exports = {
   /* Your site config here */
+  siteMetadata: {
+    title: 'Pandas eating lots'
+  },
   plugins: [
     `gatsby-plugin-styled-components`,
     {
