@@ -5,8 +5,10 @@ import Layout from '../components/layout';
 export default function About() {
   return (
     <Layout>
-      <Header headerText={"About Gatsby"}></Header>
-      <p>more content here</p>
+      <div>
+        <Header headerText={"About Gatsby"}></Header>
+        <p>more content here</p>
+      </div>
     </Layout>
   )
 }
