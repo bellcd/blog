@@ -3,6 +3,7 @@ import Layout from '../components/layout';
 import { graphql } from 'gatsby';
 
 export default function Home({ data }) {
+  console.log('data: ', data);
   return (
     <Layout>
        <h1>{data.site.siteMetadata.title}</h1>
@@ -17,7 +18,20 @@ export default function Home({ data }) {
 }
 
 export const query = graphql`
-  query {
+  {
+    allMarkdownRemark {
+      totalCount
+      edges {
+        node {
+          id
+          frontmatter {
+            description
+            title
+            date
+          }
+        }
+      }
+    }
     site {
       siteMetadata {
         title
