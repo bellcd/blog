@@ -7,7 +7,7 @@
 module.exports = {
   /* Your site config here */
   siteMetadata: {
-    title: 'Pandas eating lots'
+    title: `Christian's developer blog`
   },
   plugins: [
     `gatsby-plugin-styled-components`,
