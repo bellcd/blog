@@ -1,24 +1,21 @@
 import React from "react"
 import { Link, useStaticQuery, graphql } from 'gatsby';
 import styled from 'styled-components';
+import Footer from './footer';
 
 const Container = styled.div`
-  background-color: red;
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 100px 1fr 100px;
+  grid-template-rows: 1fr 10fr 1fr;
   height: 100vh;
   overflow: auto;
 `
 const Header = styled.header`
-  background-color: blue;
   display: flex;
   justify-content: space-between;
   padding: 0 1rem;
 `
-const Footer = styled.footer`
-  background-color: darkseagreen;
-`
+
 const StyledLi = styled.li`
   // list-style: none;
   display: inline-block;
@@ -56,7 +53,7 @@ export default function Layout({ children }) {
   return (
     <Container>
       <Header>
-        <Link to="/"><h3>My Site</h3></Link>
+        <Link to="/"><h3>{data.site.siteMetadata.title}</h3></Link>
         {/* // TODO: leaving out multi page navigation for now */}
         {/* <StyledUl>
           <StyledLink to="/"><h3>Home</h3></StyledLink>
@@ -65,10 +62,9 @@ export default function Layout({ children }) {
         </StyledUl> */}
       </Header>
       <MainContent>
-        {data.site.siteMetadata.title}
         {children}
       </MainContent>
-      <Footer>Made by Christian Dibala Bell</Footer>
+      <Footer></Footer>
     </Container>
   );
 }

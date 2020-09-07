@@ -6,7 +6,16 @@
 
 module.exports = {
   siteMetadata: {
-    title: `Christian's developer blog`
+    title: `Christian Bell`,
+    author: {
+      name: `Christian Dibala Bell`,
+      summary: `I'm a Full Stack Developer who loves finding out why a thing works the way it does. Also music, fitness, & Kurzgesagt.`,
+    },
+    description: `A collection of my explorations & thoughts on development. Opinions are my own.`,
+    siteUrl: `https://`,
+    social: {
+      linkedin: 'christian-dibala-bell/'
+    },
   },
   plugins: [
     {
