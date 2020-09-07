@@ -14,7 +14,6 @@ export default function BlogPost({ data }) {
   )
 }
 
-// TODO: what does this syntax mean??
 export const query = graphql`
   query($slug: String!) {
     markdownRemark(fields: { slug: { eq: $slug } }) {
