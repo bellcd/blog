@@ -14,7 +14,8 @@ module.exports = {
     description: `A collection of my explorations & thoughts on development. Opinions are my own.`,
     siteUrl: `https://`,
     social: {
-      linkedin: 'christian-dibala-bell/'
+      linkedin: 'christian-dibala-bell/',
+      portfolio: 'https://bellcd.github.io/'
     },
   },
   plugins: [

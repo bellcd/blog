@@ -6,6 +6,11 @@ const StyledFooter = styled.footer`
   padding: 1rem;
 `
 
+const StyledSocialLinks = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 export default function Footer() {
   const data = useStaticQuery(graphql`
   {
@@ -17,6 +22,7 @@ export default function Footer() {
         }
         social {
           linkedin
+          portfolio
         }
         description
       }
@@ -29,16 +35,20 @@ export default function Footer() {
         name, summary
       },
       social: {
-        linkedin
+        linkedin,
+        portfolio
       }
     }
   } = data.site;
+
+  console.log('portfolio: ', portfolio);
   return (
   <StyledFooter>
     {`Made with ❤️ by ${name}.`} {summary}
-    <div>
+    <StyledSocialLinks>
       <a href={`https://www.linkedin.com/in/${linkedin}`}>LinkedIn</a>
-    </div>
+      <a href={portfolio}>Portfolio</a>
+    </StyledSocialLinks>
   </StyledFooter>
   );
 }
