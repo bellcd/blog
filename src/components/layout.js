@@ -5,7 +5,7 @@ import Footer from './footer';
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 100%;
   grid-template-rows: 1fr 10fr 1fr;
   height: 100vh;
   overflow: auto;

@@ -41,7 +41,6 @@ export default function Footer() {
     }
   } = data.site;
 
-  console.log('portfolio: ', portfolio);
   return (
   <StyledFooter>
     {`Made with ❤️ by ${name}.`} {summary}

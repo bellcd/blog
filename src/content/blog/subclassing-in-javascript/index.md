@@ -317,7 +317,7 @@ Dog.prototype = Object.create(Animal.prototype); // this new object doesn't have
 Dog.prototype.constructor = Dog; // so we'll add one
 ```
 
-## tl:dr
+## tl;dr
 - Make time! This is fundamental and important.
   - Use `Call` to invoke the superclass with `this` bound to the instance object
   - Move subclass' shared methods to `[superclass].prototype`

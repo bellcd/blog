@@ -39,5 +39,4 @@ result.data.allMarkdownRemark.edges.forEach(({ node }) => {
     }
   })
 });
-console.log(JSON.stringify(result, null, 4))
 }
