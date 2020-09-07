@@ -1,10 +1,10 @@
 ---
 title: Subclassing in JavaScript
-description: "Subclassing in JavaScript"
+description: "What that means & how to do it"
 date: "2020-01-10"
 ---
 
-This week we're working on class hierarchies in JavaScript, (ie subclasses & superclasses).
+Let's talk about class hierarchies in JavaScript, (ie subclasses & superclasses).
 
 The basic idea is when you want to share SOME (but not all) properties and / or functionality between several instances of something.
 
@@ -50,6 +50,7 @@ Let's do the same type of thing for a `Cat` class.
 
 `Cats` can do things like `run`, `wagTail`, `eat` and `bark`, and also have characteristics like `breed`, `color`, `size`, & `name`. Our constructor and prototype methods might look like this:
 
+```js
 function Cat(breed, color, size, name) {
   this.breed = breed;
   this.color = color;
@@ -57,7 +58,6 @@ function Cat(breed, color, size, name) {
   this.name = name;
 }
 
-```js
 Cat.prototype.run = function() {
   console.log('My name is ' + this.name + ' and I\'m running!');
 }
@@ -75,7 +75,7 @@ Cat.prototype.meow = function() {
 }
 ```
 
-This totally works, and we can create lots of cats and dogs ... But does anything jump out at you about the code above?
+This totally works, and we can create lots of cats and dogs ... But does anything jump out at you about the code samples above for `Dog` & `Cat`?
 
 (Take a moment and actually think on it before continuing!)
 
@@ -109,9 +109,11 @@ This totally works, and we can create lots of cats and dogs ... But does anythin
 
 We're repeating ourselves quite a bit, even in a small example like this. This is breaking the general principal of Don't Repeat Yourself (DRY). Imagine how quickly this codebase could bloat if we also had classes for other pets (turtles, hamsters, rabbits, etc...)
 
-The key task at this point, then, is to **identify which things** (things here being properties or methods) **can be shared between the classes, and which must be unique.**
+The key task then, is to:
 
-Taking another look at our code, there are several places where it appears to have the exact same text - I'm going to go ahead and say that when the text is exactly the same - verbatim - that's a good indicator that we might be able to share that code somehow.
+> **identify which properties or methods can be shared between the classes, and which must be unique.**
+
+Taking another look at our code, there are several places where it appears to have the exact same text - I'm going to say that when the text is exactly the same - verbatim - that's a good indicator that we might be able to share that code somehow.
 
 1. the properties of the constructor functions
 2. the `run`, `wagTail`, & `eat` methods
@@ -174,8 +176,6 @@ In this particular case **they're all the same**. Recall from before that we ide
 
 What exactly are those steps? Well, it's setting the properties on the new object we're eventually going to return. So we need a way for BOTH `Cat` & `Dog` constructors to call a function that modifies something they pass it. But recall from above that the `new` keyword does several things under the hood.
 
-(yes, it's an issue with `this`. again)
-
 ```js
 function Dog(breed, color, size, name) {
   ____________________ // what function call can go here instead?
@@ -227,39 +227,41 @@ function Dog(breed, color, size, name) {
 
 The invocation of our `Animal` constructor did NOT use the keyword `new`, (so this does not get automatically bound to a new object, which would then be returned). Furthermore, using `call()` to invoke our `Animal` constructor allowed us to specify what the `this` binding should be when `Animal` invokes here. Here's the crucial piece:
 
-Inside our `Dog` constructor - because we always* expect it to be invoked with the keyword `new` - the new object that's created and bound to `this` - our instance object - is EXACTLY what we want our `this` keyword inside the Animal execution context to refer to. And that's precisely what invoking `Animal` with `call()`, passing in the keyword `this`, does.
+> Inside our subclass constructor (`Dog`) - because we always* expect it to be invoked with the keyword `new` - the new object that's created and bound to `this` - our instance object - is EXACTLY what we want our `this` keyword inside the superclass (`Animal`) execution context to refer to. And that's precisely what invoking the superclass with `call()`, passing in the keyword `this`, does.
 
 
 
-*The constructor `Dog`, specifically, doesn't necessarily have to be called with `new`. The general idea is the constructor of the class you want an instance of is called with `new`. So, for example, `Dog` could be a superclass to `GermanShepherd` & `ShilohShepherd`. In that case, we would use the keyword `new` to invoke one (let's say `GermanShepherd`), and then the `GermanShepherd` constructor would use `call()` to invoke `Dog`, which would also use `call()` to invoke `Animal`, all the while passing the `this` binding to the object that will eventually be our `GermanShepherd` instance through to each function's execution context.
+*The subclass in the example here, `Dog`, could itself have subclasses. The general idea is the constructor of the class you want an instance of is called with `new`. So, for example, `Dog` could be a superclass to `GermanShepherd` & `ShilohShepherd`. In that case, we would use the keyword `new` to invoke one (let's say `GermanShepherd`), and then the `GermanShepherd` constructor would use `call()` to invoke `Dog`, which would also use `call()` to invoke `Animal`, all the while passing the `this` binding to the object that will eventually be our `GermanShepherd` instance through to each function's execution context.
 
 ## Methods
 So that seems to solve the issue of properties set directly in a subclass or superclass constructor. But what about methods that are hanging out on the object(s) at a subclass's or superclass's prototype property?
 
 Here, again, we need to be careful that we make choices such that methods are only available to appropriate instance objects. Instances of both our `Dog` & `Cat` classes should both be able to `run`, `wagTail`, & `eat`, but only dogs should be able to `bark`, and only `cats` should be able to meow.
 
-Recall that every function in JavaScript gets a `prototype` property, which references a mostly empty object. Also, when we invoke that function (which by convention we call constructors - even though there's nothing inherently special in JavaScript about these functions!) with the keyword `new`, the object that is returned (you know, the one that caused so much fuss above. Yeah, THAT object) has its prototype set to the object at the constructor's `prototype` property.
+Recall that every function in JavaScript gets a `prototype` property, which references a mostly empty object. When we invoke that function (the constructor) with the keyword `new`, the object that is returned (ie, the one that caused so much fuss above!) has its prototype set to the object at the constructor's `prototype` property.
 
-All of this happens, so that we can do stuff like:
+All of this happens in part so we can do stuff like:
 
 ```js
 var spot = new Dog('Dalmation', 'black and white', 'small', 'Spot');
 spot.bark() // WOOF WOOF WOOF. I'm Spot WOOF WOOF WOOF
 ```
 
-The object referenced by spot DOES NOT HAVE a `bark()` method. `bark()` is a method on the object at `Dog.prototype`. Our `spot` instance is able to find the `bark()` method because of how JavaScript's prototype chain works.
+The object referenced by spot DOES NOT HAVE a `bark()` method. `bark()` is a method on the object at `Dog.prototype`. Our `spot` instance is able to find the `bark()` method because of [how JavaScript's prototype chain works](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object_prototypes).
 
 Please make sure that's clear, 'cause none of the rest of this will make sense if it's fuzzy!
 
-Now, every object in JavaScript will (eventually) delegate failed property lookups to `Object.prototype`. Soooo, when we're making subclasses, with regards to methods, what we basically want to do is have our `[subclass].prototype` delegate failed lookups to our `[superclass].prototype`.This is in contrast to the default behavior of our `[subclass].prototype`, which would delegate failed lookups directly to `Object.prototype`. **We're essentially adding another stop in the failed property lookup chain.**
+Now, every object in JavaScript will (eventually) delegate failed property lookups to `Object.prototype`. So, when we're making subclasses, with regards to methods, we want our `[subclass].prototype` to delegate failed lookups to our `[superclass].prototype`.This is in contrast to the default behavior of our `[subclass].prototype`, which would delegate failed lookups directly to `Object.prototype`.
+
+> **We're essentially adding another stop in the failed property lookup chain.**
 
 So how do we do this?
 
-Well, it would be super helpful if there was some syntax in JavaScript that would allow us to specify what object a given object should delegate failed lookups to (hint hint)
+Well, it would be super helpful if there was some syntax in JavaScript that allows us to specify what object a given object should delegate failed lookups to. (hint hint)
 
-Turns out there is. It's called `Object.create()`. We pass in an existing object, which will be used as the prototype to a new object that it returns.
+Turns out there is. It's called `Object.create()`. We pass in an object, which will be used as the prototype to a new object that it returns.
 
-So we can move the `run`, `wagTail`, and `eat` methods from the `Cat` and `Dog` constructor's prototype property, onto the `Animal` constructor's prototype property.
+We can move any methods that both subclasses need to access (`run`, `wagTail`, and `eat`) from their respective constructor's prototype object (`Cat` and `Dog`) onto the superclass' (`Animal`) prototype object.
 
 ```js
 Animal.prototype.run = function() {
@@ -275,7 +277,16 @@ Animal.prototype.eat = function() {
 }
 ```
 
-And also make sure that we replace the default object that's provided to us (for free) on both the `Cat` and `Dog` constructor's prototype property with a new object generated through `Object.create()` - which will make sure that that new object delegates failed property lookups to `Animal.prototype`.
+What will happen here?
+
+```js
+var spot = new Dog('Dalmation', 'black and white', 'small', 'Spot');
+spot.run() // ??
+```
+
+We're going to get an error, because the instance of `Dog` referenced by `spot` currently delegates failed property lookups to **the object at `Dog.prototype`, which right now is a mostly empty object.**
+
+We need to replace the default object that's provided to us (for free) on both the `Cat` and `Dog` constructor's prototype property with a new object generated through `Object.create()` - which will make sure that that new object delegates failed property lookups to `Animal.prototype` - ie, where we added the methods that both `Cat` & `Dog` need access to.
 
 ```js
 Cat.prototype = Object.create(Animal.prototype);
@@ -286,8 +297,6 @@ Dog.prototype = Object.create(Animal.prototype);
 You thought we were done?! Not quite, there's one other piece of housekeeping.
 
 The default object at a given constructor's prototype property (that we get for free) has a reference back to the constructor. This reference is at a property called `constructor`.
-
-Isn't that confusing?!
 
 ```js
 function Dog(breed, color, size, name) {
@@ -310,5 +319,9 @@ Dog.prototype.constructor = Dog; // so we'll add one
 
 ## tl:dr
 - Make time! This is fundamental and important.
+  - Use `Call` to invoke the superclass with `this` bound to the instance object
+  - Move subclass' shared methods to `[superclass].prototype`
+  - Use `Object.create()` to replace `[subclass].prototype` with an object that delegates to `[superclass].prototype`
+  - Set `[subclass].prototype.constructor` to reference `[subclass]`
 
 There's more to it, of course. We didn't get into historical solutions, for example - ie, before `Object.create()` existed. But the goal here is to cover how subclassing in JavaScript is commonly done now, and hopefully allow us to gain a little better insight into how it works.
