@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import Footer from './footer';
 
 const Container = styled.div`
-  display: grid;
-  grid-template-columns: 100%;
-  grid-template-rows: 1fr 10fr 1fr;
-  height: 100vh;
-  overflow: auto;
+  max-width: 1200px;
+  margin: 0 auto;
 `
 const Header = styled.header`
   display: flex;
